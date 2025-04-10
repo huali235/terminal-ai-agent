@@ -177,3 +177,4 @@ dist
 
 db.json 
 credentials.json
+token.json
