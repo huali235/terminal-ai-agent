@@ -1,33 +1,39 @@
-# Build an AI Agent from Scratch Workshop
+# Building an AI Agent from Scratch
 
-- Watch the workshop on [Frontend Masters](https://frontendmasters.com/workshops/build-ai-agent/). 
-- View the [course notes](https://clumsy-humor-894.notion.site/Agent-from-scratch-13554fed51a380749554c44aa8989406?pvs=4)
+## Description
 
-## Setup Instructions
+This project is a **customized AI-powered chatbot** designed to run directly in the terminal. It leverages OpenAI's API and GPT-4 model to process user inputs, execute tool-based operations, and generate intelligent, context-aware responses. The chatbot is built with a modular architecture that integrates natural language processing, tool orchestration, and memory management for seamless conversational interactions.
 
-This repo requires **Node.js version 20+** or **bun v1.0.20**.
+Additionally, the chatbot integrates the **OpenWeather API** for real-time weather updates and the **Google Calendar API** for managing events and schedules, enhancing its functionality and providing a more comprehensive user experience.
 
-The `main` branch contains the final application. To code along with the workshop, checkout the `step/1` branch. You will also need an [API Key from OpenAI](https://platform.openai.com/settings/organization/api-keys).
+## Features
 
-```bash
-git clone https://github.com/Hendrixer/agent-from-scratch.git
-cd agent-from-scratch
-git checkout step/1
-npm install # or bun install
-```
+- **AI-Powered Conversations**: Utilizes OpenAI's GPT-4 model for intelligent and context-aware responses.
+- **Tool Integration**: Supports tool-based operations to enhance functionality.
+- **Weather Updates**: Fetches real-time weather information using the OpenWeather API.
+- **Calendar Management**: Integrates with Google Calendar API to manage events and schedules.
+- **Terminal-Based Interface**: Runs directly in the terminal for easy access and usage.
+- **Customizable**: Designed to be extended and tailored to specific use cases.
 
-To run the project:
+## Technologies Used
 
-```bash
-npm start
-# or
-bun run index.ts
-```
+- **Languages**: Node.js, TypeScript
+- **AI Model**: OpenAI API (GPT-4)
+- **APIs**:
+  - OpenWeather API
+  - Google Calendar API
+- **Database**: SQLite
+- **Libraries**:
+  - Got: For making HTTP requests to external APIs.
+  - Zod: For schema validation and input validation.
+  - Ora: For terminal-based loading indicators.
+  - Terminal-Image: For displaying images in the terminal.
+  - UUID: For generating unique identifiers.
 
-## OpenAI API Key
+## Installation
 
-Create an [API Key from OpenAI](https://platform.openai.com/settings/organization/api-keys) and save it in a `.env` file:
-
-```
-OPENAI_API_KEY='YOUR_API_KEY'
-```
+1. Clone the repository:
+   ```bash
+   git clone <repository-url>
+   cd <repository-folder>
+   ```
