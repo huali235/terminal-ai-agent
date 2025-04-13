@@ -173,8 +173,10 @@ dist
 
 # Finder (MacOS) folder config
 .DS_Store
-.env
 
-db.json 
+# Thumbnails
 credentials.json
 token.json
+
+# Database files
+memory.db
