@@ -3,7 +3,6 @@ import * as path from 'path'
 import * as process from 'process'
 import { authenticate } from '@google-cloud/local-auth'
 import { google, calendar_v3 } from 'googleapis'
-import { testAuth } from '../auth_test'
 
 // If modifying these scopes, delete token.json.
 const SCOPES = ['https://www.googleapis.com/auth/calendar.readonly']
@@ -67,13 +66,17 @@ export async function getEventsForDate(date: string): Promise<string> {
     const auth = await getAuthClient()
     const calendar = google.calendar({ version: 'v3', auth })
 
-    // Parse the requested date
-    const requestedDate = new Date(date)
-    const startOfDay = new Date(requestedDate)
-    startOfDay.setHours(0, 0, 0, 0)
+    // Parse the requested date (which comes in YYYY-MM-DD format from parseDateFromQuery)
+    const [year, month, day] = date.split('-').map((num) => parseInt(num, 10))
 
-    const endOfDay = new Date(requestedDate)
-    endOfDay.setHours(23, 59, 59, 999)
+    // Create UTC date ranges to avoid timezone issues
+    // Month is 0-indexed in JavaScript Date
+    const startOfDay = new Date(Date.UTC(year, month - 1, day, 0, 0, 0))
+    const endOfDay = new Date(Date.UTC(year, month - 1, day, 23, 59, 59, 999))
+
+    console.log(
+      `Fetching events between ${startOfDay.toISOString()} and ${endOfDay.toISOString()}`
+    )
 
     // Get events for the specified date
     const response = await calendar.events.list({
@@ -82,12 +85,19 @@ export async function getEventsForDate(date: string): Promise<string> {
       timeMax: endOfDay.toISOString(),
       singleEvents: true,
       orderBy: 'startTime',
+      maxResults: 100, // Retrieve more events if available
     })
+
+    // Add debug logging
+    console.log(`API Response status: ${response.status}`)
+    console.log(`Found ${response.data.items?.length || 0} events`)
 
     const events = response.data.items || []
 
     if (events.length === 0) {
-      const formattedDate = requestedDate.toLocaleDateString('en-US', {
+      // Create a date object that represents the local date without time zone issues
+      const displayDate = new Date(year, month - 1, day)
+      const formattedDate = displayDate.toLocaleDateString('en-US', {
         weekday: 'long',
         month: 'long',
         day: 'numeric',
@@ -96,7 +106,8 @@ export async function getEventsForDate(date: string): Promise<string> {
     }
 
     // Format the date for display
-    const formattedDate = requestedDate.toLocaleDateString('en-US', {
+    const displayDate = new Date(year, month - 1, day)
+    const formattedDate = displayDate.toLocaleDateString('en-US', {
       weekday: 'long',
       month: 'long',
       day: 'numeric',
@@ -119,12 +130,21 @@ export async function getEventsForDate(date: string): Promise<string> {
         timeInfo = ` at ${startTime}`
       }
 
-      result += `- ${event.summary}${timeInfo}\n`
+      // Format location information
+      let locationInfo = ''
+      if (event.location) {
+        locationInfo = ` (${event.location})`
+      }
+
+      result += `- ${event.summary}${timeInfo}${locationInfo}\n`
     })
 
     return result
   } catch (error) {
     console.error('Error retrieving calendar events:', error)
+    if (error instanceof Error) {
+      return `Error retrieving calendar events: ${error.message}`
+    }
     return 'Error retrieving calendar events. Please try again.'
   }
 }
