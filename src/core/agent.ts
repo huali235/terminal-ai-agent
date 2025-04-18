@@ -5,15 +5,27 @@ import {
   resetConversation,
 } from './memory'
 import { runLLM } from './llm'
-import { showLoader, logMessage } from '../interfaces/terminal'
 import { runTool } from '../tools/toolRunner'
+import type { UICallbacks } from '../interfaces/interfaces'
 
+// Default no-op implementations for when no UI is provided
+const defaultCallbacks: UICallbacks = {
+  logMessage: () => {},
+  createLoader: () => ({
+    stop: () => {},
+    succeed: () => {},
+    fail: () => {},
+    update: () => {},
+  }),
+}
 export const runAgent = async ({
   userMessage,
   tools,
+  uiCallbacks = defaultCallbacks, // Add this parameter with defaults
 }: {
   userMessage: string
   tools: any[]
+  uiCallbacks?: UICallbacks // Optional UI callbacks
 }) => {
   // Reset conversation state before starting a new one
   await resetConversation()
@@ -21,7 +33,7 @@ export const runAgent = async ({
   // Add user message to start fresh conversation
   await addMessages([{ role: 'user', content: userMessage }])
 
-  const loader = showLoader('🤔')
+  const loader = uiCallbacks.createLoader('🤔')
 
   // First API call
   const history = await getMessages()
@@ -33,7 +45,7 @@ export const runAgent = async ({
   // If there are no tool calls, just handle it directly
   if (!response.tool_calls || response.tool_calls.length === 0) {
     await addMessages([response])
-    logMessage(response)
+    uiCallbacks.logMessage(response) // Use the callback instead
     loader.stop()
     return getMessages()
   }
@@ -78,7 +90,7 @@ export const runAgent = async ({
 
   // Save final response
   await addMessages([finalResponse])
-  logMessage(finalResponse)
+  uiCallbacks.logMessage(finalResponse) // Use the callback instead
 
   loader.stop()
   return getMessages()

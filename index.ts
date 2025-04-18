@@ -1,6 +1,7 @@
 import 'dotenv/config'
 import { runAgent } from './src/core/agent'
 import { z } from 'zod'
+import { terminalUICallbacks } from './src/interfaces/terminal'
 
 const userMessage = process.argv[2]
 
@@ -58,4 +59,8 @@ const calendarTool = {
   }),
 }
 
-await runAgent({ userMessage, tools: [weatherTool, calendarTool] })
+await runAgent({
+  userMessage,
+  tools: [weatherTool, calendarTool],
+  uiCallbacks: terminalUICallbacks,
+})

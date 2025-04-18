@@ -1,7 +1,9 @@
+// src/interfaces/terminal.ts
 import ora from 'ora'
-import type { AIMessage } from '../types'
+import type { AIMessage } from '../../types'
+import type { LoaderInterface, UICallbacks } from './interfaces'
 
-export const showLoader = (text: string) => {
+export const showLoader = (text: string): LoaderInterface => {
   const spinner = ora({
     text,
     color: 'cyan',
@@ -54,4 +56,10 @@ export const logMessage = (message: AIMessage) => {
       console.log(`${message.content}\n`)
     }
   }
+}
+
+// Create the terminal UI callbacks object to pass to the agent
+export const terminalUICallbacks: UICallbacks = {
+  logMessage,
+  createLoader: showLoader,
 }
