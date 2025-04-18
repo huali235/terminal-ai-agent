@@ -5,8 +5,8 @@ import {
   resetConversation,
 } from './memory'
 import { runLLM } from './llm'
-import { showLoader, logMessage } from './ui'
-import { runTool } from './toolRunner'
+import { showLoader, logMessage } from '../interfaces/terminal'
+import { runTool } from '../tools/toolRunner'
 
 export const runAgent = async ({
   userMessage,

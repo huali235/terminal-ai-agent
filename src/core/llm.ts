@@ -1,5 +1,5 @@
 // In llm.ts
-import type { AIMessage } from '../types'
+import type { AIMessage } from '../../types'
 import { openai } from './ai'
 import { zodFunction } from 'openai/src/helpers/zod.js'
 
@@ -16,7 +16,7 @@ export const runLLM = async ({
 
   const formattedTools = tools.map(zodFunction)
   const response = await openai.chat.completions.create({
-    model: 'gpt-4o-mini',
+    model: 'gpt-4.1-mini',
     temperature: 0.1,
     messages: cleanedMessages,
     tools: formattedTools,

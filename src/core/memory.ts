@@ -1,5 +1,5 @@
-import db from '../sqlite'
-import type { AIMessage } from '../types'
+import db from '../../sqlite'
+import type { AIMessage } from '../../types'
 import { v4 as uuidv4 } from 'uuid'
 
 export type MessageWithMetaData = AIMessage & {

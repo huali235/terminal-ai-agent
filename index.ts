@@ -1,5 +1,5 @@
 import 'dotenv/config'
-import { runAgent } from './src/agent'
+import { runAgent } from './src/core/agent'
 import { z } from 'zod'
 
 const userMessage = process.argv[2]
